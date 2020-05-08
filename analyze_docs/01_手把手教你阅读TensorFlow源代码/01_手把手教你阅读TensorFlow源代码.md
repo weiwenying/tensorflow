@@ -1,4 +1,4 @@
-# 手把手教你TensorFlow源代码阅读
+# 手把手教你阅读TensorFlow源代码
 
 ---
 
@@ -103,4 +103,96 @@ pip uninstall tensorflow
 >   # git push 你要上传的仓库地址 分支名称
 >   git push wwy code-reading
 >   ```
+
+## 删除文件
+
+将非必要的文件，先删除，只要不影响编译就可以（操作前，确保你备份了代码。你没有备份代码，代码虽然可以通过git恢复，但是不方便对比）：
+
+```bash
+# tree -L 1
+# tensorflow项目根目录/
+.
+├── ACKNOWLEDGMENTS  # 删除。
+├── ADOPTERS.md  # 删除。
+├── arm_compiler.BUILD
+├── AUTHORS  # 删除。
+├── BUILD
+├── CODE_OF_CONDUCT.md  # 删除。
+├── CODEOWNERS  # 删除。
+├── configure
+├── configure.cmd
+├── configure.py
+├── CONTRIBUTING.md  # 删除。
+├── ISSUES.md  # 删除。
+├── ISSUE_TEMPLATE.md  # 删除。
+├── LICENSE
+├── models.BUILD
+├── README.md  # 删除。
+├── RELEASE.md  # 删除。
+├── SECURITY.md  # 删除。
+├── tensorflow
+├── third_party
+├── tools
+└── WORKSPACE
+```
+
+```bash
+# 项目根目录下的/tensorflow/
+./tensorflow/
+├── api_template.__init__.py
+├── api_template_v1.__init__.py
+├── BUILD
+├── c
+├── cc
+├── compat_template.__init__.py
+├── compat_template_v1.__init__.py
+├── compiler
+├── core
+├── docs_src  # 删除。
+├── examples
+├── g3doc  # 删除。
+├── go  # 删除。
+├── __init__.py
+├── java  # 删除。
+├── js  # 删除。
+├── lite
+├── opensource_only.files
+├── python
+├── security
+├── stream_executor
+├── tensorflow.bzl
+├── tf_exported_symbols.lds
+├── tf_framework_version_script.lds
+├── tf_version_script.lds
+├── tools
+├── version_check.bzl
+├── virtual_root_template_v1.__init__.py
+├── virtual_root_template_v2.__init__.py
+└── workspace.bzl
+```
+
+这样删除后，执行编译命令：
+
+```bash
+bazel build //tensorflow/tools/pip_package:build_pip_package
+```
+
+没有报错，类似如下：
+
+```bash
+INFO: Analyzed target //tensorflow/tools/pip_package:build_pip_package (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //tensorflow/tools/pip_package:build_pip_package up-to-date:
+  bazel-bin/tensorflow/tools/pip_package/build_pip_package
+INFO: Elapsed time: 0.233s, Critical Path: 0.00s
+INFO: 0 processes.
+INFO: Build completed successfully, 1 total action
+```
+
+这样，基本操作完成，使用git做一次提交commit:
+
+```bash
+git add *
+git commit -a -m "删除编译中不使用的文件和目录。这里编译的是python版本的tensorflow。"
+```
 
